@@ -13,7 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-
+using Tarea_2.BLL;
+using Tarea_2.Entidades;
+using Tarea_2.UI.Consultas;
 
 namespace Tarea_2
 {
@@ -34,29 +36,28 @@ namespace Tarea_2
             DatosDataGrid.ItemsSource = lista;
 
             RolFechaCreacionTextBox.IsEnabled = false;
-            RolFechaCreacionTextBox.Text = Convert.ToString(DateTime.Now.Day)+"/"+Convert.ToString(DateTime.Now.Month)+"/"+Convert.ToString(DateTime.Now.Year); 
+            RolFechaCreacionTextBox.Text = Convert.ToString(DateTime.Now.Day) + "/" + Convert.ToString(DateTime.Now.Month) + "/" + Convert.ToString(DateTime.Now.Year);
         }
-       
-
-        private void btnGuardar(object sender, RoutedEventArgs e){
-            if(String.IsNullOrWhiteSpace(RolIDTextBox.Text) || string.IsNullOrEmpty(RolIDTextBox.Text))
+        private void btnGuardar(object sender, RoutedEventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(RolIDTextBox.Text) || string.IsNullOrEmpty(RolIDTextBox.Text))
             {
                 MessageBox.Show("El id del rol esta vacia...");
             }
-            else if(String.IsNullOrWhiteSpace(RolDescripcionTextBox.Text) || string.IsNullOrEmpty(RolDescripcionTextBox.Text))
+            else if (String.IsNullOrWhiteSpace(RolDescripcionTextBox.Text) || string.IsNullOrEmpty(RolDescripcionTextBox.Text))
             {
                 MessageBox.Show("La descripcion del rol esta vacia...");
             }
             else
             {
                 var encontrado = RolesBLL.ExisteRolDescripcion(RolDescripcionTextBox.Text);
-               
 
-                if(encontrado != true)
+
+                if (encontrado != true)
                 {
                     Roles roles = new Roles(Convert.ToInt32(RolIDTextBox.Text), RolDescripcionTextBox.Text);
-                    var paso = RolesBLL.Guardar(roles); 
-                    if(paso)
+                    var paso = RolesBLL.Guardar(roles);
+                    if (paso)
                     {
                         MessageBox.Show("Rol creado con exito...");
 
@@ -64,11 +65,11 @@ namespace Tarea_2
                         DatosDataGrid.ItemsSource = lista;
 
                         RolIDTextBox.Text = "";
-                    
+
                         RolDescripcionTextBox.Text = "";
                     }
                     else
-                        MessageBox.Show("No se pudo crear el rol...");
+                        MessageBox.Show("No se pudo crear el rol, ya existe...");
 
                 }
                 else
@@ -79,60 +80,78 @@ namespace Tarea_2
             }
         }
 
-        public void btnBuscar(object sender, RoutedEventArgs e){
-            
+        public void btnBuscar(object sender, RoutedEventArgs e)
+        {
 
-            if(String.IsNullOrWhiteSpace(RolIDTextBox.Text) || string.IsNullOrEmpty(RolIDTextBox.Text)){
-                
+
+            if (String.IsNullOrWhiteSpace(RolIDTextBox.Text) || string.IsNullOrEmpty(RolIDTextBox.Text))
+            {
+
                 MessageBox.Show("Id del rol esta vacio...");
 
             }
             else
             {
-               
+
                 var encontrado = RolesBLL.Buscar(Convert.ToInt16(RolIDTextBox.Text));
 
-                if(encontrado != null)
+                if (encontrado != null)
                 {
-                   
+
                     this.roles = encontrado;
                     this.DataContext = this.roles;
 
                     RolIDTextBox.Text = Convert.ToString(roles.RolId);
-                    RolFechaCreacionTextBox.Text = Convert.ToString(DateTime.Now.Day)+"/"+Convert.ToString(DateTime.Now.Month)+"/"+Convert.ToString(DateTime.Now.Year);
+                    RolFechaCreacionTextBox.Text = Convert.ToString(DateTime.Now.Day) + "/" + Convert.ToString(DateTime.Now.Month) + "/" + Convert.ToString(DateTime.Now.Year);
                     RolDescripcionTextBox.Text = roles.Descripcion;
-                
 
-                    MessageBox.Show("Encontrado...");
-                }else{
+
+                    btnBuscarPropiedades.Content = "🔍";
+                    MessageBox.Show("Encontrado, no cambiar id...");
+                    btnEditarPropiedades.IsEnabled = true;
+                }
+                else
+                {
+                    btnBuscarPropiedades.Content = "🔍";
                     MessageBox.Show("No Existe...");
+                    RolDescripcionTextBox.Text = "";
+                    btnEditarPropiedades.IsEnabled = false;
                 }
 
             }
-           
+
         }
 
         public void btnEliminar(object sender, RoutedEventArgs e)
         {
-            if(RolesBLL.Eliminar(Convert.ToInt16(RolIDTextBox.Text)))
+
+            if (String.IsNullOrWhiteSpace(RolIDTextBox.Text) || string.IsNullOrEmpty(RolIDTextBox.Text))
             {
-                var lista = RolesBLL.GetLista();
-                DatosDataGrid.ItemsSource = lista;
-                MessageBox.Show("Rol eliminado!", "Exito", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("El id del rol esta vacia...");
             }
             else
-                MessageBox.Show("No fue posible eliminar Rol !", "Fallo", MessageBoxButton.OK, MessageBoxImage.Error);
-
+            {
+                if (RolesBLL.Eliminar(Convert.ToInt16(RolIDTextBox.Text)))
+                {
+                    var lista = RolesBLL.GetLista();
+                    DatosDataGrid.ItemsSource = lista;
+                    RolIDTextBox.Text = "";
+                    RolDescripcionTextBox.Text = "";
+                    MessageBox.Show("Rol eliminado!", "Exito", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                    MessageBox.Show("No fue posible eliminar Rol !", "Fallo", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public void btnEditar(object sender, RoutedEventArgs e)
         {
 
-            if(String.IsNullOrWhiteSpace(RolIDTextBox.Text) || string.IsNullOrEmpty(RolIDTextBox.Text))
+            if (String.IsNullOrWhiteSpace(RolIDTextBox.Text) || string.IsNullOrEmpty(RolIDTextBox.Text))
             {
                 MessageBox.Show("El id del rol esta vacia...");
             }
-            else if(String.IsNullOrWhiteSpace(RolDescripcionTextBox.Text) || string.IsNullOrEmpty(RolDescripcionTextBox.Text))
+            else if (String.IsNullOrWhiteSpace(RolDescripcionTextBox.Text) || string.IsNullOrEmpty(RolDescripcionTextBox.Text))
             {
                 MessageBox.Show("La descripcion del rol esta vacia...");
             }
@@ -140,11 +159,11 @@ namespace Tarea_2
             {
                 var encontrado = RolesBLL.ExisteRolDescripcion(RolDescripcionTextBox.Text);
 
-                if(encontrado != true){
-
+                if (encontrado != true)
+                {
                     Roles roles = new Roles(Convert.ToInt32(RolIDTextBox.Text), RolDescripcionTextBox.Text);
-                    var paso = RolesBLL.Modificar(roles); 
-                    if(paso)
+                    var paso = RolesBLL.Modificar(roles);
+                    if (paso)
                     {
                         MessageBox.Show("Rol Modificado con exito...");
 
@@ -152,25 +171,29 @@ namespace Tarea_2
                         DatosDataGrid.ItemsSource = lista;
 
                         RolIDTextBox.Text = "";
-                    
+
                         RolDescripcionTextBox.Text = "";
                     }
                     else
                         MessageBox.Show("No se pudo modificar el rol...");
-
                 }
                 else
                 {
                     MessageBox.Show("Rol ya existe...");
-
                 }
             }
         }
 
         public void btnNuevo(object sender, RoutedEventArgs e)
         {
-            RolIDTextBox.Text = "";         
+            RolIDTextBox.Text = "";
             RolDescripcionTextBox.Text = "";
+        }
+
+        public void btnConsulta(object sender, RoutedEventArgs e)
+        {
+            cRoles cRoles = new cRoles();
+            cRoles.Show();
         }
     }
 }

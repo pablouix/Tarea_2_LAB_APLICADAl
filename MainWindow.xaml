@@ -17,13 +17,14 @@
                             
                         </TextBox >
 
-                        <Button Content="🔍"  VerticalAlignment="Center" Width="33"  Height="33" Margin="0,0,0,-10" Click="btnBuscar"/>
-                        <Button Content="📄"  VerticalAlignment="Center" Width="33"  Height="33" Margin="0,0,0,-10" Click="btnNuevo"/>
+                        <Button Content="🔍"  VerticalAlignment="Center" Width="33"  Height="33" Margin="0,0,0,-10" Click="btnBuscar" x:Name="btnBuscarPropiedades"/>
+                        <Button Content="📄"  VerticalAlignment="Center" Width="33"  Height="33" Margin="0,0,0,-10" Click="btnNuevo" />
+                        <Button Content="Consulta"  VerticalAlignment="Center" Width="90"  Height="33" Margin="0,0,0,-10" Click="btnConsulta"/>
 
                     </TextBlock>
 
                     <TextBlock Text="Fecha de Creación: " FontSize="18"  Margin="0,10,0,10">
-                        <TextBox x:Name="RolFechaCreacionTextBox" Text="" Width="110"  Height="33"  VerticalContentAlignment="Center" Margin="0,0,0,-10" HorizontalContentAlignment="Center"/>
+                        <DatePicker x:Name="RolFechaCreacionTextBox" Text="" Width="130"  Height="33"  VerticalContentAlignment="Center" Margin="0,0,0,-10" HorizontalContentAlignment="Center"/>
                     </TextBlock>
 
                     <TextBlock Text="Descripción: " FontSize="18"  Margin="0,10,0,10">
@@ -40,13 +41,9 @@
                 </StackPanel>
 
                 <StackPanel Margin="0, 16, 0, 0" Orientation = "Horizontal" HorizontalAlignment="Center" >
-                  
-                    
                     <Button Content="💾Guardar" Width="117"  Height="34"  FontSize="18" Margin="10,0,10,0" Click="btnGuardar"/>
-                    <Button Content="📝Editar" Width="117"  Height="34"  FontSize="18"  Margin="10,0,10,0" Click="btnEditar" IsEnabled="true"/>
-                    <Button Content="🗑️Eliminar" Width="117"  Height="34"  FontSize="18"  Margin="10,0,10,0" Click="btnEliminar"/>
-                      
-                   
+                    <Button Content="📝Editar" Width="117"  Height="34"  FontSize="18"  Margin="10,0,10,0" Click="btnEditar" IsEnabled="false" x:Name="btnEditarPropiedades"/>
+                    <Button Content="🗑️Eliminar" Width="117"  Height="34"  FontSize="18"  Margin="10,0,10,0" Click="btnEliminar"/>  
                 </StackPanel>
         </StackPanel>
     </Grid>
